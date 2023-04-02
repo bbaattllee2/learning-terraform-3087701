@@ -24,8 +24,8 @@ module "autoscaling" {
   # insert the 1 required variable here
 
   name     = "web"
-  min_size = var.min_size
-  max_size = var.max_size
+  min_size = var.asg_min_size
+  max_size = var.asg_max_size
   vpc_zone_identifier = module.web_vpc.public_subnets
   target_group_arns  = module.web_alb.target_group_arns
   security_groups     = [module.web_sg.security_group_id]
