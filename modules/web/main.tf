@@ -23,7 +23,7 @@ module "autoscaling" {
   version = "6.9.0"
   # insert the 1 required variable here
 
-  name     = "web"
+  name     = var.environment.name
   min_size = var.asg_min_size
   max_size = var.asg_max_size
   vpc_zone_identifier = module.web_vpc.public_subnets
@@ -70,7 +70,7 @@ module "web_alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 8.0"
 
-  name = "web-alb"
+  name = "${var.environment.name}-alb"
 
   load_balancer_type = "application"
 
