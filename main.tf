@@ -29,10 +29,10 @@ resource "aws_instance" "web" {
   }
 }
 
-module "vpc" {
+module "web_vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = "my-vpc"
+  name = "dev"
   cidr = "10.0.0.0/16"
 
   azs             = ["us-west-2a", "us-west-2b", "us-west-2c"]
@@ -50,20 +50,13 @@ module "vpc" {
 module "web_sg" {
   source = "terraform-aws-modules/security-group/aws//modules/http-80"
 
-  name        = "web-server"
+  name        = "web"
   description = "Security group for web-server with HTTP ports open within VPC"
-  vpc_id      = module.vpc.public_subnets[0]
+  vpc_id      = module.web_vpc.vpc_id
 
   ingress_rules       = ["http-80-tcp", "https-443-tcp"]
   ingress_cidr_blocks = ["0.0.0.0/0"]
 
   egress_rules       = ["all-all"]
   egress_cidr_blocks = ["0.0.0.0/0"]
-}
-
-resource "aws_security_group" "web" {
-  name        = "web"
-  description = "Allow http and https in. Allow everything out"
-
-  vpc_id = data.aws_vpc.default.id
 }
